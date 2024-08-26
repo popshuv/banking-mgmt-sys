@@ -12,13 +12,14 @@ public:
     void deposit(double amount);
     void withdraw(double amount);
     void display();
+    virtual void addInterest();
 };
 
 class SavingsAccount : public BankAccount {
 public:
     double interestRate;
 
-    void addInterest();
+    void addInterest() override;
 };
 
 class CheckingAccount : public BankAccount {

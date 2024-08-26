@@ -37,8 +37,6 @@ int main() {
 				std::cin >> savingsAccount.accountHolderName;
 				std::cout << "Enter the balance: ";
 				std::cin >> savingsAccount.balance;
-				std::cout << "Enter the interest rate: ";
-				std::cin >> savingsAccount.interestRate;
 				break;
 			}
 			case 2:
@@ -92,9 +90,40 @@ int main() {
 			break;
 		}
 		case 4: {
+			std::cout << "Enter the account holder's name to withdraw money: ";
+			std::string nameWithdraw;
+			std::cin >> nameWithdraw;
+
+			if (accounts.find(nameWithdraw) != accounts.end()) {
+				double amount;
+				std::cout << "Enter the amount to withdraw: ";
+				std::cin >> amount;
+				accounts[nameWithdraw]->withdraw(amount);
+			}
+			else {
+				std::cout << "No account found for the holder name: " << nameWithdraw << "\n";
+			}
 			break;
 		}
 		case 5: {
+			std::cout << "Enter the account holder's name to apply interest: ";
+			std::string nameInterest;
+			std::cin >> nameInterest;
+
+			if (accounts.find(nameInterest) != accounts.end()) {
+				SavingsAccount* savingsAccount = dynamic_cast<SavingsAccount*>(accounts[nameInterest]);
+
+				if (savingsAccount) {
+					savingsAccount->addInterest();  
+					std::cout << "Interest has been applied.\n";
+				}
+				else {
+					std::cout << "The account is not a Savings Account. Interest cannot be applied.\n";
+				}
+			}
+			else {
+				std::cout << "No account found for the holder name: " << nameInterest << "\n";
+			}
 			break;
 		}
 		case 6:

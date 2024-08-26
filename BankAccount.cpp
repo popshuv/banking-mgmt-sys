@@ -22,12 +22,17 @@ public:
 		std::cout << "Account Holder Name: " << accountHolderName << std::endl;
 		std::cout << "Balance: " << balance << std::endl;
 	}
+
+    virtual void addInterest() {
+        // Default implementation: do nothing or throw an exception
+        throw std::logic_error("Interest can only be applied to savings accounts.");
+    }
 };
 
 class SavingsAccount : public BankAccount {
-    double interestRate;
+    double interestRate = 3.5;
 
-    void addInterest() {
+    void addInterest() override {
 		balance += balance * interestRate;
 	}
 };
