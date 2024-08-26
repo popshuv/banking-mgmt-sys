@@ -16,7 +16,9 @@ int main() {
 	std::cin >> select;
 
 	do {
+
 		switch (select) {
+
 		case 1: {
 			int accountType{};
 			std::cout << "Select the type of account you want to create: \n"
@@ -57,30 +59,44 @@ int main() {
 				std::cout << "Invalid selection. Returning to main menu.\n";
 				break;
 			}
+
 			break;
 		}
-		case 2:
+		case 2: {
 			std::cout << "Enter the account holder's name to display information: ";
 			std::string name;
 			std::cin >> name;
 
 			if (accounts.find(name) != accounts.end()) {
 				accounts[name]->display();
-			} else {
+			}
+			else {
 				std::cout << "No account found for the holder name: " << name << "\n";
 			}
 			break;
+		}
+		case 3: {
+			std::cout << "Enter the account holder's name to deposit money: ";
+			std::string nameDeposit;
+			std::cin >> nameDeposit;
 
+			if (accounts.find(nameDeposit) != accounts.end()) {
+				double amount;
+				std::cout << "Enter the amount to deposit: ";
+				std::cin >> amount;
+				accounts[nameDeposit]->deposit(amount);
+			}
+			else {
+				std::cout << "No account found for the holder name: " << nameDeposit << "\n";
+			}
 			break;
-		case 3:
-			// tba
+		}
+		case 4: {
 			break;
-		case 4:
-			// tba
+		}
+		case 5: {
 			break;
-		case 5:
-			// tba
-			break;
+		}
 		case 6:
 			std::cout << "Exiting the program.\n";
 			break;
