@@ -1,21 +1,23 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "BankAccount.h"
+#include <random>
+#include "class.h"
 
 int main() {
 	std::unordered_map<std::string, BankAccount*> accounts;
 	int select{};
-	std::cout << "Select an account type to create: \n"
-		<< "1. Create a new account\n"
-		<< "2. Display account information\n"
-		<< "3. Deposit money into an account\n"
-		<< "4. Withdraw money from an account\n"
-		<< "5. Apply interest to a savings account\n"
-		<< "6. Exit the program\n";
-	std::cin >> select;
 
 	do {
+
+		std::cout << "Select an account type to create: \n"
+			<< "1. Create a new account\n"
+			<< "2. Display account information\n"
+			<< "3. Deposit money into an account\n"
+			<< "4. Withdraw money from an account\n"
+			<< "5. Apply interest to a savings account\n"
+			<< "6. Exit the program\n";
+		std::cin >> select;
 
 		switch (select) {
 
@@ -26,40 +28,35 @@ int main() {
 				<< "2. Checking Account\n";
 			std::cin >> accountType;
 
-			switch (accountType) {
-			case 1:
-			{
-				std::cout << "You have selected to create a Savings Account.\n";
-				SavingsAccount savingsAccount;
-				std::cout << "Enter the account number: ";
-				std::cin >> savingsAccount.accountNumber;
-				std::cout << "Enter the account holder name: ";
-				std::cin >> savingsAccount.accountHolderName;
-				std::cout << "Enter the balance: ";
-				std::cin >> savingsAccount.balance;
-				break;
-			}
-			case 2:
-			{
-				std::cout << "You have selected to create a Checking Account.\n";
-				CheckingAccount checkingAccount;
-				std::cout << "Enter the account number: ";
-				std::cin >> checkingAccount.accountNumber;
-				std::cout << "Enter the account holder name: ";
-				std::cin >> checkingAccount.accountHolderName;
-				std::cout << "Enter the balance: ";
-				std::cin >> checkingAccount.balance;
-				std::cout << "Enter the overdraft limit: ";
-				std::cin >> checkingAccount.overdraftLimit;
-				break;
-			}
-			default:
-				std::cout << "Invalid selection. Returning to main menu.\n";
-				break;
-			}
+			std::string name;
+			std::cout << "Enter the account holder name: ";
+			std::cin >> name;
 
+			double initBalance;
+			std::cout << "Enter an initial balance: ";
+			std::cin >> initBalance;
+
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_int_distribution<> dist(10000000, 99999999);
+
+			int randomAccountNumber = dist(gen);
+
+			if (accountType == 1) {
+				SavingsAccount* savingsAccount = new SavingsAccount();
+				savingsAccount->accountNumber = randomAccountNumber;
+				savingsAccount->balance = initBalance;
+				accounts[name] = savingsAccount;
+			}
+			else if (accountType == 2) {
+				CheckingAccount* checkingAccount = new CheckingAccount();
+				checkingAccount->accountNumber = randomAccountNumber;
+				accounts[name] = checkingAccount;
+			}
+			std::cout << name << " created with Account Number: " << randomAccountNumber << std::endl;
 			break;
 		}
+
 		case 2: {
 			std::cout << "Enter the account holder's name to display information: ";
 			std::string name;
@@ -98,13 +95,36 @@ int main() {
 				double amount;
 				std::cout << "Enter the amount to withdraw: ";
 				std::cin >> amount;
-				accounts[nameWithdraw]->withdraw(amount);
+
+				// Check if it's a CheckingAccount to handle overdraft
+				CheckingAccount* checkingAccount = dynamic_cast<CheckingAccount*>(accounts[nameWithdraw]);
+
+				if (checkingAccount) {
+					if (checkingAccount->balance - amount < checkingAccount->overdraftLimit) {
+						std::cout << "Insufficient funds: Cannot withdraw that amount with the current overdraft limit.\n";
+					}
+					else {
+						checkingAccount->withdraw(amount);
+						std::cout << "Withdrawal successful. New balance: " << checkingAccount->balance << "\n";
+					}
+				}
+				else {
+					// For SavingsAccount
+					if (accounts[nameWithdraw]->balance < amount) {
+						std::cout << "Insufficient funds: Cannot withdraw that amount.\n";
+					}
+					else {
+						accounts[nameWithdraw]->withdraw(amount);
+						std::cout << "Withdrawal successful. New balance: " << accounts[nameWithdraw]->balance << "\n";
+					}
+				}
 			}
 			else {
 				std::cout << "No account found for the holder name: " << nameWithdraw << "\n";
 			}
 			break;
 		}
+
 		case 5: {
 			std::cout << "Enter the account holder's name to apply interest: ";
 			std::string nameInterest;
@@ -114,7 +134,7 @@ int main() {
 				SavingsAccount* savingsAccount = dynamic_cast<SavingsAccount*>(accounts[nameInterest]);
 
 				if (savingsAccount) {
-					savingsAccount->addInterest();  
+					savingsAccount->addInterest();
 					std::cout << "Interest has been applied.\n";
 				}
 				else {
