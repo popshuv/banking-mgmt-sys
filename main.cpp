@@ -44,13 +44,16 @@ int main() {
 
 			if (accountType == 1) {
 				SavingsAccount* savingsAccount = new SavingsAccount();
+				savingsAccount->accountHolderName = name;
 				savingsAccount->accountNumber = randomAccountNumber;
 				savingsAccount->balance = initBalance;
 				accounts[name] = savingsAccount;
 			}
 			else if (accountType == 2) {
 				CheckingAccount* checkingAccount = new CheckingAccount();
+				checkingAccount->accountHolderName = name;
 				checkingAccount->accountNumber = randomAccountNumber;
+				checkingAccount->balance = initBalance;
 				accounts[name] = checkingAccount;
 			}
 			std::cout << name << " created with Account Number: " << randomAccountNumber << std::endl;
