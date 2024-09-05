@@ -4,38 +4,57 @@
 #include <string>
 
 class BankAccount {
+
 public:
+    // Base class constructors and destructors
+    BankAccount();
+    virtual ~BankAccount();
+
+    // Member functions
+    void deposit(double amount);
+    virtual void withdraw(double amount);
+    void display();
+
+    // Setters
+    void setAccountHolderName(const std::string& name);
+    void setAccountNumber(int number);
+    void setBalance(double amount);
+
+    // Getters
+    std::string getAccountHolderName() const;
+    int getAccountNumber() const;
+    double getBalance() const;
+
+protected:
     int accountNumber;
     std::string accountHolderName;
     double balance;
-
-    BankAccount(); // Default constructor
-    BankAccount(int accNumber, const std::string& accHolderName, double initBalance);
-
-    void deposit(double amount);
-    void withdraw(double amount);
-    void display();
-    virtual void addInterest();  // Declare addInterest as virtual
 };
 
+// Derived classes
 class SavingsAccount : public BankAccount {
+
 public:
+    SavingsAccount();
+    virtual ~SavingsAccount();
+
+    void addInterest();
+
+private:
     double interestRate;
 
-    // Constructor inherits default initBalance = 0 from BankAccount
-    SavingsAccount(int accNumber, const std::string& accHolderName, double initBalance = 0, double rate = 0);
-    SavingsAccount(); // Default constructor
-
-    void addInterest() override;
 };
 
 class CheckingAccount : public BankAccount {
+
 public:
+    CheckingAccount();
+    virtual ~CheckingAccount();
+
+    void withdraw(double amount) override;
+
+    double getOverdraftLimit() const { return overdraftLimit; }
+
+private:
     double overdraftLimit;
-
-    // Constructor inherits default initBalance = 0 from BankAccount
-    CheckingAccount(int accNumber, const std::string& accHolderName, double initBalance = 0, double limit = 0);
-    CheckingAccount(); // Default constructor
-
-    void withdraw(double amount);
 };

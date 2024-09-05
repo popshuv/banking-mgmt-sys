@@ -44,21 +44,22 @@ int main() {
 
 			if (accountType == 1) {
 				SavingsAccount* savingsAccount = new SavingsAccount();
-				savingsAccount->accountHolderName = name;
-				savingsAccount->accountNumber = randomAccountNumber;
-				savingsAccount->balance = initBalance;
+				savingsAccount->setAccountHolderName(name);
+				savingsAccount->setAccountNumber(randomAccountNumber);
+				savingsAccount->setBalance(initBalance);
 				accounts[name] = savingsAccount;
 			}
 			else if (accountType == 2) {
 				CheckingAccount* checkingAccount = new CheckingAccount();
-				checkingAccount->accountHolderName = name;
-				checkingAccount->accountNumber = randomAccountNumber;
-				checkingAccount->balance = initBalance;
+				checkingAccount->setAccountHolderName(name);
+				checkingAccount->setAccountNumber(randomAccountNumber);
+				checkingAccount->setBalance(initBalance);
 				accounts[name] = checkingAccount;
 			}
 			std::cout << name << " created with Account Number: " << randomAccountNumber << std::endl;
 			break;
 		}
+
 
 		case 2: {
 			std::cout << "Enter the account holder's name to display information: ";
@@ -103,22 +104,22 @@ int main() {
 				CheckingAccount* checkingAccount = dynamic_cast<CheckingAccount*>(accounts[nameWithdraw]);
 
 				if (checkingAccount) {
-					if (checkingAccount->balance - amount < checkingAccount->overdraftLimit) {
+					if (checkingAccount->getBalance() - amount < checkingAccount->getOverdraftLimit()) {
 						std::cout << "Insufficient funds: Cannot withdraw that amount with the current overdraft limit.\n";
 					}
 					else {
 						checkingAccount->withdraw(amount);
-						std::cout << "Withdrawal successful. New balance: " << checkingAccount->balance << "\n";
+						std::cout << "Withdrawal successful. New balance: " << checkingAccount->getBalance() << "\n";
 					}
 				}
 				else {
 					// For SavingsAccount
-					if (accounts[nameWithdraw]->balance < amount) {
+					if (accounts[nameWithdraw]->getBalance() < amount) {
 						std::cout << "Insufficient funds: Cannot withdraw that amount.\n";
 					}
 					else {
 						accounts[nameWithdraw]->withdraw(amount);
-						std::cout << "Withdrawal successful. New balance: " << accounts[nameWithdraw]->balance << "\n";
+						std::cout << "Withdrawal successful. New balance: " << accounts[nameWithdraw]->getBalance() << "\n";
 					}
 				}
 			}
