@@ -76,3 +76,7 @@ void CheckingAccount::withdraw(double amount) {
         balance -= amount;
     }
 }
+
+double CheckingAccount::getOverdraftLimit() const {
+    return overdraftLimit;
+}
